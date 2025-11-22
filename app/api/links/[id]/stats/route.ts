@@ -14,11 +14,12 @@ export const GET = async (
     return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
   }
 
-  const link = await Link.findById(params.id).lean();
+  const link = await Link.findById(params.id);
 
   if (!link) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 });
   }
+  const linkId = link._id as any;
 
   const recentClicks = await ClickEvent.find({ linkId: link._id })
     .sort({ clickedAt: -1 })
