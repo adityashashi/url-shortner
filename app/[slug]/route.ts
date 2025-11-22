@@ -12,8 +12,7 @@ export const GET = async (
 
   await connectDB();
 
-  const link = await Link.findOne({ shortCode: slug }).lean();
-
+  const link = await Link.findOne({ shortCode: slug });
   if (!link || (link.expiresAt && new Date(link.expiresAt) < new Date())) {
     return new NextResponse('<h1>Link not found</h1>', {
       status: 404,
@@ -29,12 +28,12 @@ export const GET = async (
     userAgent,
     ipHash,
     country
-  }).catch(() => {});
+  }).catch(() => { });
 
   Link.updateOne(
     { _id: link._id },
     { $inc: { clickCount: 1 } }
-  ).catch(() => {});
+  ).catch(() => { });
 
   return NextResponse.redirect(link.longUrl as string, 302);
 };
